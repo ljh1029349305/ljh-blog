@@ -4,7 +4,6 @@ import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dto.ArticleDTO;
-import com.example.dto.ArticleQueryDTO;
 import com.example.entity.Article;
 import com.example.rep.R;
 import com.example.service.ArticleService;
@@ -12,6 +11,8 @@ import com.example.vo.ArticleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/article")
@@ -27,15 +28,15 @@ public class ArticleController {
             @RequestParam(defaultValue = "10") Integer size) {
         try {
             Page<ArticleVO> result = articleService.getArticleList(page, size);
-            return R.ok().setData(result);
+            return R.ok(result);
         } catch (Exception e) {
-            return R.error("获取文章列表失败：" + e.getMessage());
+            return R.error(500, "文章查询失败");
         }
     }
     
     @GetMapping("/getArticle/{id}")
     public R getArticleDetail(@PathVariable Long id) {
-        return articleService.getArticleDetail(id);
+        return R.ok(articleService.getArticleDetail(id));
     }
     
 
@@ -49,11 +50,23 @@ public class ArticleController {
             @RequestParam(defaultValue = "10") Integer size) {
         try {
             Page<Article> result = articleService.getMyArticles(page, size);
-            return R.ok().setData(result);
+            return R.ok(result);
         } catch (Exception e) {
             log.error("获取文章列表失败", e);
-            return R.error("获取文章列表失败");
+            return R.error(500,"获取文章列表失败");
         }
+    }
+
+    /**
+     * 热门文章
+     */
+    @SaCheckLogin
+    @GetMapping("/hotArticles")
+    public R hotArticles(@RequestParam(defaultValue = "1") Integer page,
+                         @RequestParam(defaultValue = "5") Integer size) {
+            List<Article> result = articleService.hotArticles(page, size);
+            return R.ok(result);
+
     }
 
     /**
@@ -64,12 +77,10 @@ public class ArticleController {
     public R createArticle(@RequestBody ArticleDTO articleDTO) {
         try {
             Article article = articleService.createArticle(articleDTO);
-            return R.ok().setData(article);
-        } catch (IllegalArgumentException e) {
-            return R.error(e.getMessage());
-        } catch (Exception e) {
+            return R.ok(article);
+        }  catch (Exception e) {
             log.error("创建文章失败", e);
-            return R.error("创建文章失败");
+            return R.error(500,"创建文章失败");
         }
     }
 
@@ -84,10 +95,10 @@ public class ArticleController {
             // 获取当前用户ID
             Long userId = StpUtil.getLoginIdAsLong();
             boolean isLiked = articleService.isArticleLiked(articleId, userId);
-            return R.ok().setData(isLiked);
+            return R.ok(isLiked);
         } catch (Exception e) {
             log.error("获取点赞状态失败", e);
-            return R.error("获取点赞状态失败");
+            return R.error(500,"获取点赞状态失败");
         }
     }
 
@@ -101,10 +112,10 @@ public class ArticleController {
             // 获取当前用户ID
             Long userId = StpUtil.getLoginIdAsLong();
             boolean isLiked = articleService.toggleArticleLike(articleId, userId);
-            return R.ok().setData(isLiked);
+            return R.ok(isLiked);
         } catch (Exception e) {
             log.error("操作失败", e);
-            return R.error("操作失败");
+            return R.error(500,"操作失败");
         }
     }
 
@@ -116,12 +127,10 @@ public class ArticleController {
     public R updateArticle(@PathVariable Long id, @RequestBody ArticleDTO articleDTO) {
         try {
             Article article = articleService.updateArticle(id, articleDTO);
-            return R.ok().setData(article);
-        } catch (RuntimeException e) {
-            return R.error(e.getMessage());
-        } catch (Exception e) {
+            return R.ok(article);
+        }  catch (Exception e) {
             log.error("更新文章失败", e);
-            return R.error("更新文章失败");
+            return R.error(500,"更新文章失败");
         }
     }
 
@@ -134,14 +143,10 @@ public class ArticleController {
         try {
             articleService.deleteArticle(id);
             return R.ok("删除成功");
-        } catch (RuntimeException e) {
-            return R.error(e.getMessage());
-        } catch (Exception e) {
+        }  catch (Exception e) {
             log.error("删除文章失败", e);
-            return R.error("删除文章失败");
+            return R.error(500,"删除文章失败");
         }
     }
-
-
 
 }

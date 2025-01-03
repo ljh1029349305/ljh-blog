@@ -5,6 +5,7 @@ import com.example.dto.RegisterDTO;
 import com.example.dto.UserUpdateDTO;
 import com.example.entity.User;
 import com.example.rep.R;
+import com.example.vo.UserInfoVO;
 import com.example.vo.UserStatsVO;
 
 public interface UserService {
@@ -21,12 +22,12 @@ public interface UserService {
     /**
      * 获取用户信息
      */
-    R getUserInfo();
+    UserInfoVO getUserInfo();
     
     /**
      * 更新用户信息
      */
-    R updateUserInfo(UserUpdateDTO userUpdateDTO);
+    void updateUserInfo(UserUpdateDTO userUpdateDTO);
 
     R logout();
 

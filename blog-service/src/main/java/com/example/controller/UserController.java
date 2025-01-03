@@ -27,7 +27,7 @@ public class UserController {
             // 验证用户名密码
             User user = userService.validateUser(loginDTO);
             if (user == null) {
-                return R.error("用户名或密码错误");
+                return R.error(500,"用户名或密码错误");
             }
 
             // 登录成功，获取token
@@ -39,9 +39,9 @@ public class UserController {
             data.put("token", tokenValue);
             data.put("user", user);
 
-            return R.ok().setData(data);
+            return R.ok(data);
         } catch (Exception e) {
-            return R.error("登录失败：" + e.getMessage());
+            return R.error(500,"登录失败：" + e.getMessage());
         }
     }
     
@@ -53,13 +53,14 @@ public class UserController {
     @SaCheckLogin
     @GetMapping("/info")
     public R getUserInfo() {
-        return userService.getUserInfo();
+        return R.ok(userService.getUserInfo());
     }
     
     @SaCheckLogin
     @PutMapping("/update")
     public R updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO) {
-        return userService.updateUserInfo(userUpdateDTO);
+        userService.updateUserInfo(userUpdateDTO);
+        return R.ok("更新成功");
     }
 
     /**
@@ -76,7 +77,7 @@ public class UserController {
             // 或者使用 StpUtil.logout(loginId); 注销指定账号
             return R.ok("退出成功");
         } catch (Exception e) {
-            return R.error("退出失败：" + e.getMessage());
+            return R.error(500,"退出失败：" + e.getMessage());
         }
     }
 }

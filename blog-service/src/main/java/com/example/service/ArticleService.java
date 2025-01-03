@@ -2,10 +2,11 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dto.ArticleDTO;
-import com.example.dto.ArticleQueryDTO;
 import com.example.entity.Article;
 import com.example.rep.R;
 import com.example.vo.ArticleVO;
+
+import java.util.List;
 
 public interface ArticleService {
     /**
@@ -16,7 +17,7 @@ public interface ArticleService {
     /**
      * 获取文章详情
      */
-    R getArticleDetail(Long id);
+    Article getArticleDetail(Long id);
     
     /**
      * 点赞文章
@@ -46,5 +47,5 @@ public interface ArticleService {
     void deleteArticle(Long id);
 
 
-
+    List<Article> hotArticles(Integer page, Integer size);
 }

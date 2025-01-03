@@ -30,10 +30,9 @@ public class AuthorController {
     public R getAuthorInfo(@PathVariable Long authorId) {
         try {
             UserStatsVO stats = userService.getUserStats(authorId);
-            return R.ok().setData(stats);
+            return R.ok(stats);
         } catch (Exception e) {
-            log.error("获取作者信息失败", e);
-            return R.error(e.getMessage());
+            return R.error(500,"获取作者信息失败");
         }
     }
     
@@ -46,7 +45,7 @@ public class AuthorController {
         try {
             Long userId = StpUtil.getLoginIdAsLong();
             if (userId.equals(authorId)) {
-                return R.error("不能关注自己");
+                return R.error(500,"不能关注自己");
             }
             
             LambdaQueryWrapper<UserFollow> wrapper = new LambdaQueryWrapper<UserFollow>()
@@ -61,15 +60,14 @@ public class AuthorController {
                 follow.setUserId(userId);
                 follow.setFollowId(authorId);
                 userFollowMapper.insert(follow);
-                return R.ok().setData(true);
+                return R.ok(true);
             } else {
                 // 取消关注
                 userFollowMapper.delete(wrapper);
-                return R.ok().setData(false);
+                return R.ok(false);
             }
         } catch (Exception e) {
-            log.error("操作失败", e);
-            return R.error(e.getMessage());
+            return R.error(500,"操作失败");
         }
     }
 }

@@ -2,13 +2,12 @@ package com.example.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.dto.ArticleDTO;
-import com.example.dto.ArticleQueryDTO;
 import com.example.entity.Article;
 import com.example.entity.ArticleLike;
 import com.example.entity.User;
+import com.example.exception.BusinessException;
 import com.example.mapper.ArticleLikeMapper;
 import com.example.mapper.ArticleMapper;
 import com.example.mapper.UserMapper;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,19 +63,29 @@ public class ArticleServiceImpl implements ArticleService {
         resultPage.setRecords(records);
         return resultPage;
     }
+
+    @Override
+    public List<Article> hotArticles(Integer page, Integer size) {
+        // 构建分页查询
+
+        // 执行分页查询
+        List<Article> hotArticlesPage = articleMapper.hotArticles(page, size);
+
+        return hotArticlesPage;
+    }
     
     @Override
-    public R getArticleDetail(Long id) {
+    public Article getArticleDetail(Long id) {
         Article article = articleMapper.selectById(id);
         if (article == null) {
-            return R.error("文章不存在");
+            throw new BusinessException("文章不存在");
         }
         
         // 增加浏览量
         article.setViews(article.getViews() + 1);
         articleMapper.updateById(article);
         
-        return R.ok().setData(article);
+        return article;
     }
 
 
@@ -232,5 +240,7 @@ public class ArticleServiceImpl implements ArticleService {
         // 删除文章（软删除）
         articleMapper.deleteById(id);
     }
+
+
 
 }

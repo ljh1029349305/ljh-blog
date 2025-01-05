@@ -15,6 +15,22 @@ spring:
     erializer:
       key: org.springframework.data.redis.serializer.StringRedisSerializer
       value: org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
+    # 文件上传配置
+  servlet:
+
+    multipart:
+    max-file-size: 10MB
+    max-request-size: 10MB
+
+  # 二维码配置
+
+qrcode:
+  # Windows系统示例
+  save-path: D:/blog/upload/qrcode/
+  # Linux系统示例
+  # save-path: /usr/local/blog/upload/qrcode/
+  # 开发环境示例
+  access-path: http://localhost:8081/api/qrcode/
 
 
 mybatis-plus:
@@ -45,3 +61,22 @@ sa-token:
 logging:
   level:
     cn.dev33.satoken: DEBUG
+
+# 微信支付配置
+
+wx:
+  pay:
+    # APIv3密钥
+    api-v3-key:
+    # APPID
+    appid:
+    # 商户ID
+    mch-id:
+    # 商户API证书序列号
+    mch-serial-no:
+    # 接收支付结果通知地址
+    notify-domain: https://127.0.0.1/pay/wxNativeNotify
+    # 退款回调通知
+    refund-notify-domain: https://127.0.0.1/pay/wxRefundNotify
+    # 商户私钥文件路径
+    private-key-path: D:\key\apiclient_key.pem

@@ -2,9 +2,9 @@ package com.example.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
-import com.example.dto.LoginDTO;
-import com.example.dto.RegisterDTO;
-import com.example.dto.UserUpdateDTO;
+import com.example.dto.user.LoginDTO;
+import com.example.dto.user.RegisterDTO;
+import com.example.dto.user.UserUpdateDTO;
 import com.example.entity.User;
 import com.example.rep.R;
 import com.example.service.UserService;

@@ -42,7 +42,7 @@ public class AuthorController {
     @SaCheckLogin
     @PostMapping("/{authorId}/follow")
     public R followAuthor(@PathVariable Long authorId) {
-        try {
+
             Long userId = StpUtil.getLoginIdAsLong();
             if (userId.equals(authorId)) {
                 return R.error(500,"不能关注自己");
@@ -66,8 +66,5 @@ public class AuthorController {
                 userFollowMapper.delete(wrapper);
                 return R.ok(false);
             }
-        } catch (Exception e) {
-            return R.error(500,"操作失败");
-        }
     }
 }
